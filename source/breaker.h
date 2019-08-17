@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "point.h"
 #include "constants.h"
+#include <citro2d.h>
 
 #define BREAKER_SIDE 8
 
@@ -36,4 +37,7 @@ short Breaker_LeftEnd(BreakerBall* target);
 short Breaker_RightEnd(BreakerBall* target);
 void Breaker_ClampPosition(BreakerBall* target, short left, short right, short top, short bottom);
 unsigned short Breaker_ResolveCollisionBelow(BreakerBall* target, short start, short end);
+
+void Breaker_DrawBreaker(BreakerBall* target, u32 clrRec);
+
 #endif

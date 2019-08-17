@@ -61,3 +61,10 @@ unsigned char Level_TickLevel (LevelRuntimeData* level) {
   }
   return 0;
 }
+
+void Level_DrawLevel(LevelRuntimeData* level, u32 clrRec, u32 clrPad) {
+  for (unsigned char i = 0; i < level->BreakerCount; i++) {
+    Breaker_DrawBreaker(level->Breakers[i], clrRec);
+  }
+  C2D_DrawRectangle(level->PadPosition, SCREEN_HEIGHT - PAD_HEIGHT, 0, PAD_LENGTH, PAD_HEIGHT, clrPad, clrPad, clrPad, clrPad);
+}

@@ -107,10 +107,7 @@ int main(int argc, char* argv[]) {
 		C2D_TargetClear(top, clrClear);
 		C2D_SceneBegin(top);
 
-		C2D_DrawRectangle((*testData.Breakers[0]->Position).X, (*testData.Breakers[0]->Position).Y, 0, BREAKER_SIDE, BREAKER_SIDE, clrRec, clrRec, clrRec, clrRec);
-
-		//Draw bottom pad
-		C2D_DrawRectangle(testData.PadPosition, SCREEN_HEIGHT - PAD_HEIGHT, 0, PAD_LENGTH, PAD_HEIGHT, clrRec, clrRec, clrRec, clrRec);
+		Level_DrawLevel(&testData, clrRec, clrRec);
 
 		C3D_FrameEnd(0);
 	}

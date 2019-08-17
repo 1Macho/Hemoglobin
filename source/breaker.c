@@ -42,3 +42,7 @@ unsigned short Breaker_ResolveCollisionBelow(BreakerBall* target, short start, s
   }
   return 0;
 }
+
+void Breaker_DrawBreaker(BreakerBall* target, u32 clrRec) {
+  C2D_DrawRectangle(target->Position->X, target->Position->Y, 0, BREAKER_SIDE, BREAKER_SIDE, clrRec, clrRec, clrRec, clrRec);
+}

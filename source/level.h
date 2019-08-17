@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "point.h"
 #include "breaker.h"
 #include "constants.h"
+#include <citro2d.h>
 
 
 #define PAD_LENGTH 32
@@ -34,7 +35,10 @@ typedef struct LevelRuntimeData {
   short PadPosition;
   unsigned char BlockStates [11][6];
 } LevelRuntimeData;
-#endif
 
 unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level);
 unsigned char Level_TickLevel (LevelRuntimeData* level);
+void Level_DrawLevel(LevelRuntimeData* level, u32 clrRec, u32 clrPad);
+
+
+#endif
