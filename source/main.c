@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Total blocks vertically = 6
 // Total blocks horizontally = 11
 
-
-// Simple citro2d untextured shape example
 #include <citro2d.h>
 
 #include <string.h>
@@ -36,10 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TOUCH_WIDTH 310
 #define TOUCH_PADDING 5
 
-
-//---------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
-//---------------------------------------------------------------------------------
+
   // Init libs
   gfxInitDefault();
   C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
@@ -91,18 +87,12 @@ int main(int argc, char* argv[]) {
     printf("\x1b[2;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
     printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
     printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
-    /*
-    printf("\x1b[5;1H(*testData.Breakers[0]->Position).X:  %d%%\x1b[K", (*testData.Breakers[0]->Position).X);
-    printf("\x1b[6;1H(*testData.Breakers[0]->Position).Y:  %d%%\x1b[K", (*testData.Breakers[0]->Position).Y);
-    printf("\x1b[7;1H(*testData.Breakers[0]->Velocity).X:  %d%%\x1b[K", (*testData.Breakers[0]->Velocity).X);
-    printf("\x1b[8;1H(*testData.Breakers[0]->Velocity).Y:  %d%%\x1b[K", (*testData.Breakers[0]->Velocity).Y);
-    printf("\x1b[9;1HTouch:  %03d; %03d", touch.px, touch.py);*/
 
     if (Level_TickLevel(&testData)) {
       break;
     }
 
-        // Render the scene
+    // Render the scene
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
     C2D_TargetClear(top, clrClear);
     C2D_SceneBegin(top);
