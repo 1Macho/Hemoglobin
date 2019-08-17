@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 		if (touch.px >= TOUCH_PADDING & touch.px <= TOUCH_WIDTH - TOUCH_PADDING) {
 			short interpolation_id = touch.px - TOUCH_PADDING;
 			long interpolation = interpolation_id * SCREEN_WIDTH / (TOUCH_WIDTH - TOUCH_PADDING * 2);
-			testData.PadPosition = interpolation - (PAD_LENGTH / 2);
+			testData.TargetPadPosition = interpolation - (PAD_LENGTH / 2);
 		}
 
 		// Respond to user input

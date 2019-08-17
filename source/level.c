@@ -52,6 +52,8 @@ unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
 }
 
 unsigned char Level_TickLevel (LevelRuntimeData* level) {
+  short PadDifference = level->TargetPadPosition - level->PadPosition;
+  level->PadPosition += PadDifference / 2;
   for (unsigned char i = 0; i < level->BreakerCount; i++) {
     if (Level_TickBall(level->Breakers[i], level)) {
       return 1;
