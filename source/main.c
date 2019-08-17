@@ -62,6 +62,12 @@ int main(int argc, char* argv[]) {
   testData.BreakerCount = 1;
   testData.PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
 
+  for (unsigned char x = 0; x < BLOCK_HORIZONTAL; x++) {
+    for (unsigned char y = 0; y < BLOCK_VERTICAL; y++) {
+      testData.BlockStates[x][y] = 0x1;
+    }
+  }
+
 
   // Main loop
   while (aptMainLoop())

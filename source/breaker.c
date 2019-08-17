@@ -36,11 +36,26 @@ short Breaker_RightEnd(BreakerBall* target) {
   return target->Position->X + BREAKER_SIDE;
 }
 
-unsigned short Breaker_ResolveCollisionBelow(BreakerBall* target, short start, short end) {
-  if (((Breaker_LeftEnd(target) >= start) & (Breaker_LeftEnd(target) <= end)) | ((Breaker_RightEnd(target) >= start) & (Breaker_RightEnd(target) <= end))) {
-    return 1;
+unsigned char Breaker_ResolveCollisionVertical(BreakerBall* target, short start, short end) {
+  unsigned short result = 0;
+  if ((Breaker_LeftEnd(target) >= start) & (Breaker_LeftEnd(target) <= end)) {
+    result = 1;
   }
-  return 0;
+  if ((Breaker_RightEnd(target) >= start) & (Breaker_RightEnd(target) <= end)) {
+    result = result + 2;
+  }
+  return result;
+}
+
+unsigned char Breaker_ResolveCollisionHorizontal(BreakerBall* target, short start, short end) {
+  unsigned short result = 0;
+  if ((Breaker_TopEnd(target) >= start) & (Breaker_TopEnd(target) <= end)) {
+    result = 1;
+  }
+  if ((Breaker_BottomEnd(target) >= start) & (Breaker_BottomEnd(target) <= end)) {
+    result = result + 2;
+  }
+  return result;
 }
 
 void Breaker_DrawBreaker(BreakerBall* target, u32 clrRec) {
