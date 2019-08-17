@@ -28,9 +28,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PAD_LENGTH 32
 #define PAD_HEIGHT 6
 
-#define TOUCH_WIDTH 310
-#define TOUCH_PADDING 5
-
+#define BLOCK_WIDTH 36
+#define BLOCK_HEIGHT (BLOCK_WIDTH / 3)
+#define BLOCK_PADDING 3
+#define BLOCK_VERTICAL 6
+#define BLOCK_HORIZONTAL 8
+#define BLOCK_SIZE_HORIZONTAL (((BLOCK_WIDTH + BLOCK_PADDING) * BLOCK_HORIZONTAL) - BLOCK_PADDING)
+#define BLOCK_START_H ((SCREEN_WIDTH / 2) - (BLOCK_SIZE_HORIZONTAL / 2))
+#define BLOCK_START_V 12
 
 typedef struct LevelRuntimeData {
   BreakerBall* Breakers[32];

@@ -67,6 +67,14 @@ void Level_DrawLevel(LevelRuntimeData* level, u32 clrRec, u32 clrPad) {
     Breaker_DrawBreaker(level->Breakers[i], clrRec);
   }
   C2D_DrawRectangle(level->PadPosition, SCREEN_HEIGHT - PAD_HEIGHT, 0, PAD_LENGTH, PAD_HEIGHT, clrPad, clrPad, clrPad, clrPad);
+
+  for (unsigned char x = 0; x < BLOCK_HORIZONTAL; x++) {
+    for (unsigned char y = 0; y < BLOCK_VERTICAL; y++) {
+      short xPos = BLOCK_START_H + (x * (BLOCK_WIDTH + BLOCK_PADDING));
+      short yPos = BLOCK_START_V + (y * (BLOCK_HEIGHT + BLOCK_PADDING));
+      C2D_DrawRectangle(xPos, yPos, 0, BLOCK_WIDTH, BLOCK_HEIGHT, clrPad, clrPad, clrPad, clrPad);
+    }
+  }
 }
 
 void Level_HandleInput(LevelRuntimeData* level) {

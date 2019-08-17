@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Clear blocks height = 12
 // Padding between blocks = 3
 // Total blocks vertically = 6
-// Total blocks horizontally = 11
+// Total blocks horizontally = 8
 
 #include <citro2d.h>
 
