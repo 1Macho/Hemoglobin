@@ -16,6 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Clear block width = 36
+// Clear blocks height = 12
+// Padding between blocks = 3
+// Total blocks vertically = 6
+// Total blocks horizontally = 11
+
 
 // Simple citro2d untextured shape example
 #include <citro2d.h>
@@ -23,15 +29,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#define SCREEN_WIDTH  400
-#define SCREEN_HEIGHT 240
+#include "point.h"
+#include "breaker.h"
+#include "level.h"
 
 #define TOUCH_WIDTH 310
 #define TOUCH_PADDING 5
-#define BREAKER_SIDE 8
-#define PAD_LENGTH 32
-#define PAD_HEIGHT 6
+
 
 //---------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
@@ -47,16 +51,23 @@ int main(int argc, char* argv[]) {
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
 
-	u32 clrRec = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
-	u32 clrClear = C2D_Color32(0x00, 0x00, 0x00, 0x68);
+	u32 clrRec = C2D_Color32(0xAB, 0x3F, 0x3F, 0xFF);
+	u32 clrClear = C2D_Color32(0x23, 0x23, 0x23, 0x68);
 
-	short posX = SCREEN_WIDTH / 2;
-	short posY = SCREEN_HEIGHT / 2;
-	short vX = 1;
-	short vY = 1;
-	short padPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
-
-	short saveable = 1;
+	Point testBallPosition;
+	testBallPosition.X = SCREEN_WIDTH / 2;
+	testBallPosition.Y = SCREEN_HEIGHT / 2;
+	Point testBallVelocity;
+	testBallVelocity.X = 1;
+	testBallVelocity.Y = 1;
+	BreakerBall testBall;
+	testBall.Position = &testBallPosition;
+	testBall.Velocity = &testBallVelocity;
+	testBall.Saveable = 1;
+	LevelRuntimeData testData;
+	testData.Breakers[0] = &testBall;
+	testData.BreakerCount = 1;
+	testData.PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
 
 
 	// Main loop
@@ -69,7 +80,7 @@ int main(int argc, char* argv[]) {
 		if (touch.px >= TOUCH_PADDING & touch.px <= TOUCH_WIDTH - TOUCH_PADDING) {
 			short interpolation_id = touch.px - TOUCH_PADDING;
 			long interpolation = interpolation_id * SCREEN_WIDTH / (TOUCH_WIDTH - TOUCH_PADDING * 2);
-			padPosition = interpolation - (PAD_LENGTH / 2);
+			testData.PadPosition = interpolation - (PAD_LENGTH / 2);
 		}
 
 		// Respond to user input
@@ -80,53 +91,26 @@ int main(int argc, char* argv[]) {
 		printf("\x1b[2;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
 		printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
 		printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
-		printf("\x1b[5;1HPosX:  %d%%\x1b[K", posX);
-		printf("\x1b[6;1HPosY:  %d%%\x1b[K", posY);
-		printf("\x1b[7;1HVX:  %d%%\x1b[K", vX);
-		printf("\x1b[8;1HVY:  %d%%\x1b[K", vY);
-		printf("\x1b[9;1HTouch:  %03d; %03d", touch.px, touch.py);
+		/*
+		printf("\x1b[5;1H(*testData.Breakers[0]->Position).X:  %d%%\x1b[K", (*testData.Breakers[0]->Position).X);
+		printf("\x1b[6;1H(*testData.Breakers[0]->Position).Y:  %d%%\x1b[K", (*testData.Breakers[0]->Position).Y);
+		printf("\x1b[7;1H(*testData.Breakers[0]->Velocity).X:  %d%%\x1b[K", (*testData.Breakers[0]->Velocity).X);
+		printf("\x1b[8;1H(*testData.Breakers[0]->Velocity).Y:  %d%%\x1b[K", (*testData.Breakers[0]->Velocity).Y);
+		printf("\x1b[9;1HTouch:  %03d; %03d", touch.px, touch.py);*/
+
+		if (Level_TickLevel(&testData)) {
+			break;
+		}
 
 				// Render the scene
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
 		C2D_TargetClear(top, clrClear);
 		C2D_SceneBegin(top);
 
-		// Bouncy rectangle
-		posX += vX;
-		posY += vY;
-		if (posX + BREAKER_SIDE > SCREEN_WIDTH) {
-			vX = 0 - vX;
-			posX = SCREEN_WIDTH - BREAKER_SIDE;
-		}
-		if (posX < 0) {
-			vX = 0 - vX;
-			posX = 0;
-		}
-		if (posY + BREAKER_SIDE > SCREEN_HEIGHT - PAD_HEIGHT) {
-			if (saveable) {
-				if (((posX > padPosition) & (posX < padPosition + PAD_LENGTH)) | ((posX + BREAKER_SIDE > padPosition) & (posX + BREAKER_SIDE < padPosition + PAD_LENGTH))) {
-					vY = 0 - vY;
-					posY = SCREEN_HEIGHT - PAD_HEIGHT - BREAKER_SIDE - 1;
-				}
-				else {
-					saveable = 0;
-				}
-			}
-		}
-		if (posY + BREAKER_SIDE > SCREEN_HEIGHT) {
-			//vY = 0 - vY;
-			//posY = SCREEN_HEIGHT - BREAKER_SIDE;
-			break;
-		}
-		if (posY < 0) {
-			vY = 0 - vY;
-			posY = 0;
-		}
-
-		C2D_DrawRectangle(posX, posY, 0, BREAKER_SIDE, BREAKER_SIDE, clrRec, clrRec, clrRec, clrRec);
+		C2D_DrawRectangle((*testData.Breakers[0]->Position).X, (*testData.Breakers[0]->Position).Y, 0, BREAKER_SIDE, BREAKER_SIDE, clrRec, clrRec, clrRec, clrRec);
 
 		//Draw bottom pad
-		C2D_DrawRectangle(padPosition, SCREEN_HEIGHT - PAD_HEIGHT, 0, PAD_LENGTH, PAD_HEIGHT, clrRec, clrRec, clrRec, clrRec);
+		C2D_DrawRectangle(testData.PadPosition, SCREEN_HEIGHT - PAD_HEIGHT, 0, PAD_LENGTH, PAD_HEIGHT, clrRec, clrRec, clrRec, clrRec);
 
 		C3D_FrameEnd(0);
 	}
