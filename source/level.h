@@ -28,6 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PAD_LENGTH 32
 #define PAD_HEIGHT 6
 
+#define TOUCH_WIDTH 310
+#define TOUCH_PADDING 5
+
+
 typedef struct LevelRuntimeData {
   BreakerBall* Breakers[32];
   unsigned char BreakerCount;
@@ -39,6 +43,6 @@ typedef struct LevelRuntimeData {
 unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level);
 unsigned char Level_TickLevel (LevelRuntimeData* level);
 void Level_DrawLevel(LevelRuntimeData* level, u32 clrRec, u32 clrPad);
-
+void Level_HandleInput(LevelRuntimeData* level);
 
 #endif

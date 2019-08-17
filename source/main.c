@@ -31,9 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "breaker.h"
 #include "level.h"
 
-#define TOUCH_WIDTH 310
-#define TOUCH_PADDING 5
-
 int main(int argc, char* argv[]) {
 
   // Init libs
@@ -70,14 +67,8 @@ int main(int argc, char* argv[]) {
   while (aptMainLoop())
   {
     hidScanInput();
-    touchPosition touch;
-    hidTouchRead(&touch);
 
-    if (touch.px >= TOUCH_PADDING & touch.px <= TOUCH_WIDTH - TOUCH_PADDING) {
-      short interpolation_id = touch.px - TOUCH_PADDING;
-      long interpolation = interpolation_id * SCREEN_WIDTH / (TOUCH_WIDTH - TOUCH_PADDING * 2);
-      testData.TargetPadPosition = interpolation - (PAD_LENGTH / 2);
-    }
+		Level_HandleInput(&testData);
 
     // Respond to user input
     u32 kDown = hidKeysDown();

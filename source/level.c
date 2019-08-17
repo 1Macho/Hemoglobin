@@ -68,3 +68,14 @@ void Level_DrawLevel(LevelRuntimeData* level, u32 clrRec, u32 clrPad) {
   }
   C2D_DrawRectangle(level->PadPosition, SCREEN_HEIGHT - PAD_HEIGHT, 0, PAD_LENGTH, PAD_HEIGHT, clrPad, clrPad, clrPad, clrPad);
 }
+
+void Level_HandleInput(LevelRuntimeData* level) {
+  touchPosition touch;
+  hidTouchRead(&touch);
+
+  if ((touch.px >= TOUCH_PADDING) & (touch.px <= TOUCH_WIDTH - TOUCH_PADDING)) {
+    short interpolation_id = touch.px - TOUCH_PADDING;
+    long interpolation = interpolation_id * SCREEN_WIDTH / (TOUCH_WIDTH - TOUCH_PADDING * 2);
+    level->TargetPadPosition = interpolation - (PAD_LENGTH / 2);
+  }
+}
