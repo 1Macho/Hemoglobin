@@ -65,12 +65,12 @@ unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char 
   if (top & left) {
     short dx = blockEndX - Breaker_LeftEnd(target);
     short dy = blockEndY - Breaker_TopEnd(target);
-    if (dx > dy) {
+    if (dx < dy) {
       target->Position->X = blockEndX + 1;
       Point_Invert(target->Velocity, 0);
       return 1;
     }
-    if (dy > dx) {
+    if (dy < dx) {
       target->Position->Y = blockEndY + 1;
       Point_Invert(target->Velocity, 1);
       return 1;
@@ -87,19 +87,19 @@ unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char 
   if (top & right) {
     short dx = Breaker_RightEnd(target) - blockStartX;
     short dy = blockEndY - Breaker_TopEnd(target);
-    if (dx > dy) {
+    if (dx < dy) {
       target->Position->X = blockStartX - BREAKER_SIDE - 1;
       Point_Invert(target->Velocity, 0);
       return 1;
     }
-    if (dy > dx) {
+    if (dy < dx) {
       target->Position->Y = blockEndY + 1;
       Point_Invert(target->Velocity, 1);
       return 1;
     }
     if (dx == dy) {
       target->Position->X = blockStartX - BREAKER_SIDE - 1;
-      Point_Invert(target->Velocity, 0);-
+      Point_Invert(target->Velocity, 0);
       target->Position->Y = blockEndY + 1;
       Point_Invert(target->Velocity, 1);
       return 1;
@@ -109,12 +109,12 @@ unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char 
   if (bottom & left) {
     short dx = blockEndX - Breaker_LeftEnd(target);
     short dy = Breaker_BottomEnd(target) - blockStartY;
-    if (dx > dy) {
+    if (dx < dy) {
       target->Position->X = blockEndX + 1;
       Point_Invert(target->Velocity, 0);
       return 1;
     }
-    if (dy > dx) {
+    if (dy < dx) {
       target->Position->Y = blockStartY - BREAKER_SIDE - 1;
       Point_Invert(target->Velocity, 1);
       return 1;
@@ -130,12 +130,12 @@ unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char 
   if (bottom & right) {
     short dx = Breaker_RightEnd(target) - blockStartX;
     short dy = Breaker_BottomEnd(target) - blockStartY;
-    if (dx > dy) {
+    if (dx < dy) {
       target->Position->X = blockStartX - BREAKER_SIDE - 1;
       Point_Invert(target->Velocity, 0);
       return 1;
     }
-    if (dy > dx) {
+    if (dy < dx) {
       target->Position->Y = blockStartY - BREAKER_SIDE - 1;
       Point_Invert(target->Velocity, 1);
       return 1;
