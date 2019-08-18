@@ -39,6 +39,13 @@ void Breaker_ClampPosition(BreakerBall* target, short left, short right, short t
 unsigned char Breaker_ResolveCollisionVertical(BreakerBall* target, short start, short end);
 unsigned char Breaker_ResolveCollisionHorizontal(BreakerBall* target, short start, short end);
 
+void Breaker_CollideTop(BreakerBall* target, short surface);
+void Breaker_CollideBottom(BreakerBall* target, short surface);
+void Breaker_CollideRight(BreakerBall* target, short surface);
+void Breaker_CollideLeft(BreakerBall* target, short surface);
+
+unsigned char Breaker_CollideWithBlock(BreakerBall* target, short blockStartX, short blockEndX, short blockStartY, short blockEndY);
+
 void Breaker_DrawBreaker(BreakerBall* target, u32 clrRec);
 
 #endif
