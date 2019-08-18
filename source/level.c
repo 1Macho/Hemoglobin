@@ -30,6 +30,8 @@ unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char 
   unsigned char top = collisionMaskH % 2;
   unsigned char bottom = collisionMaskH / 2;
   //printf("\x1b[9;1HCb:  %03d; %03d; %03d; %03d", left, right, top, bottom);
+
+  //Trivial collision cases
   if (left & right & top & bottom) {
     return 1;
   }
@@ -57,6 +59,96 @@ unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char 
       return 1;
     }
   }
+
+  //Non-trivial collision cases
+
+  if (top & left) {
+    short dx = blockEndX - Breaker_LeftEnd(target);
+    short dy = blockEndY - Breaker_TopEnd(target);
+    if (dx > dy) {
+      target->Position->X = blockEndX + 1;
+      Point_Invert(target->Velocity, 0);
+      return 1;
+    }
+    if (dy > dx) {
+      target->Position->Y = blockEndY + 1;
+      Point_Invert(target->Velocity, 1);
+      return 1;
+    }
+    if (dx == dy) {
+      target->Position->X = blockEndX + 1;
+      Point_Invert(target->Velocity, 0);
+      target->Position->Y = blockEndY + 1;
+      Point_Invert(target->Velocity, 1);
+      return 1;
+    }
+  }
+
+  if (top & right) {
+    short dx = Breaker_RightEnd(target) - blockStartX;
+    short dy = blockEndY - Breaker_TopEnd(target);
+    if (dx > dy) {
+      target->Position->X = blockStartX - BREAKER_SIDE - 1;
+      Point_Invert(target->Velocity, 0);
+      return 1;
+    }
+    if (dy > dx) {
+      target->Position->Y = blockEndY + 1;
+      Point_Invert(target->Velocity, 1);
+      return 1;
+    }
+    if (dx == dy) {
+      target->Position->X = blockStartX - BREAKER_SIDE - 1;
+      Point_Invert(target->Velocity, 0);-
+      target->Position->Y = blockEndY + 1;
+      Point_Invert(target->Velocity, 1);
+      return 1;
+    }
+  }
+
+  if (bottom & left) {
+    short dx = blockEndX - Breaker_LeftEnd(target);
+    short dy = Breaker_BottomEnd(target) - blockStartY;
+    if (dx > dy) {
+      target->Position->X = blockEndX + 1;
+      Point_Invert(target->Velocity, 0);
+      return 1;
+    }
+    if (dy > dx) {
+      target->Position->Y = blockStartY - BREAKER_SIDE - 1;
+      Point_Invert(target->Velocity, 1);
+      return 1;
+    }
+    if (dx == dy) {
+      target->Position->X = blockEndX + 1;
+      Point_Invert(target->Velocity, 0);
+      target->Position->Y = blockStartY - BREAKER_SIDE - 1;
+      Point_Invert(target->Velocity, 1);
+      return 1;
+    }
+  }
+  if (bottom & right) {
+    short dx = Breaker_RightEnd(target) - blockStartX;
+    short dy = Breaker_BottomEnd(target) - blockStartY;
+    if (dx > dy) {
+      target->Position->X = blockStartX - BREAKER_SIDE - 1;
+      Point_Invert(target->Velocity, 0);
+      return 1;
+    }
+    if (dy > dx) {
+      target->Position->Y = blockStartY - BREAKER_SIDE - 1;
+      Point_Invert(target->Velocity, 1);
+      return 1;
+    }
+    if (dx == dy) {
+      target->Position->X = blockStartX - BREAKER_SIDE - 1;
+      Point_Invert(target->Velocity, 0);
+      target->Position->Y = blockStartY - BREAKER_SIDE - 1;
+      Point_Invert(target->Velocity, 1);
+      return 1;
+    }
+  }
+
   return 0;
 }
 
