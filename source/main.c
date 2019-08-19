@@ -55,7 +55,9 @@ int main(int argc, char* argv[]) {
   //C2D_TextParse(&testText, testTextBuf, "test.");
   C2D_TextOptimize(&testText);
 
-  LevelRuntimeData* testData = Level_CreateNew(0);
+  unsigned char currentDifficulty = 3;
+
+  LevelRuntimeData* testData = Level_CreateNew(currentDifficulty);
 
 
   // Main loop
@@ -73,9 +75,15 @@ int main(int argc, char* argv[]) {
     printf("\x1b[2;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
     printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
     printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
+    printf("\x1b[7;1HLevel:  %3d", testData->Difficulty);
 
-    if (Level_TickLevel(testData)) {
+    unsigned char levelTickResult = Level_TickLevel(testData);
+    if (levelTickResult == 0x1) {
       break;
+    }
+    if (levelTickResult == 0x2) {
+      currentDifficulty = currentDifficulty + 1;
+      testData = Level_CreateNew(currentDifficulty);
     }
 
     // Render the scene

@@ -45,6 +45,7 @@ typedef struct LevelRuntimeData {
   short TargetPadPosition;
   short PadPosition;
   unsigned short PadLength;
+  unsigned char EnabledBlocks;
   unsigned char Difficulty;
   unsigned char BlockStates [BLOCK_HORIZONTAL][BLOCK_VERTICAL];
 } LevelRuntimeData;

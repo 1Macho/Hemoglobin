@@ -26,13 +26,14 @@ LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
   if (ballCountIntermediate < 1) { ballCountIntermediate = 1; }
   result->TargetBreakerCount = ballCountIntermediate;
   for (int y = 0; y < BLOCK_VERTICAL; y++) {
-    unsigned short toSet = (difficulty/4) * y;
+    unsigned short toSet = (difficulty) * y;
     if (toSet < 1) {toSet = 1;}
     if (toSet > 255) {toSet = 255;}
     for (int x = 0; x < BLOCK_HORIZONTAL; x++) {
       result->BlockStates[x][y] = toSet;
     }
   }
+  result->EnabledBlocks = BLOCK_VERTICAL * BLOCK_HORIZONTAL;
   result->TargetPadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
   result->PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
   result->BreakerCount = 1;
@@ -87,6 +88,9 @@ unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
       if (level->BlockStates[x][y] > 0x0) {
         if (Level_VerifyBallBlockCollision(target, x, y)) {
           level->BlockStates[x][y] = level->BlockStates[x][y] - 1;
+          if (level->BlockStates[x][y] == 0x0) {
+            level->EnabledBlocks = level->EnabledBlocks - 1;
+          }
         }
       }
     }
@@ -104,6 +108,9 @@ unsigned char Level_TickLevel (LevelRuntimeData* level) {
       if (Level_TickBall(level->Breakers[i], level)) {
         return 1;
       }
+    }
+    if (level->EnabledBlocks == 0x0) {
+      return 2;
     }
   }
   return 0;
