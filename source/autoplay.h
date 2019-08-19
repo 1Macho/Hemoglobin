@@ -16,21 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef COLORS
-#define COLORS
+#ifndef AUTOPLAY
+#define AUTOPLAY
 
+#include "breaker.h"
+#include "level.h"
 
-#include <citro2d.h>
-#include <stdlib.h>
-
-typedef struct Color Color;
-struct Color {
-  unsigned char r;
-  unsigned char g;
-  unsigned char b;
-};
-Color Color_FromHSV(unsigned char h,unsigned char s,unsigned char v);
-
-u32* Color_GeneratePalete(unsigned char s, unsigned char v);
+void Autoplay_FakeInput(LevelRuntimeData* toPlay);
 
 #endif

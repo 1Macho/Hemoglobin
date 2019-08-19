@@ -21,10 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
   LevelRuntimeData* result = malloc(sizeof(LevelRuntimeData));
   result->Difficulty = difficulty;
-  short ballCountIntermediate = (difficulty/32)+1;
-  if (ballCountIntermediate > 8) { ballCountIntermediate = 8; }
-  if (ballCountIntermediate < 1) { ballCountIntermediate = 1; }
-  result->TargetBreakerCount = ballCountIntermediate;
+  long accumulatedHardness = 0;
   for (int y = 0; y < BLOCK_VERTICAL; y++) {
     double calculatedHardness = tan((M_PI*((double)y))/(20.0)) * (double)(difficulty);
     unsigned short toSet = (unsigned short) calculatedHardness;
@@ -32,8 +29,13 @@ LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
     if (toSet > 255) {toSet = 255;}
     for (int x = 0; x < BLOCK_HORIZONTAL; x++) {
       result->BlockStates[x][y] = toSet;
+      accumulatedHardness = accumulatedHardness + toSet;
     }
   }
+  short ballCountIntermediate = (accumulatedHardness/(BLOCK_HORIZONTAL*BLOCK_VERTICAL));
+  if (ballCountIntermediate > 8) { ballCountIntermediate = 8; }
+  if (ballCountIntermediate < 1) { ballCountIntermediate = 1; }
+  result->TargetBreakerCount = ballCountIntermediate;
   result->EnabledBlocks = BLOCK_VERTICAL * BLOCK_HORIZONTAL;
   result->TargetPadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
   result->PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);

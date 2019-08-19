@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Clear blocks height = 12
 // Padding between blocks = 3
 // Total blocks vertically = 6
+
 // Total blocks horizontally = 8
 
 #include <citro2d.h>
@@ -30,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "point.h"
 #include "breaker.h"
 #include "level.h"
+#include "autoplay.h"
 #include "color.h"
 
 int main(int argc, char* argv[]) {
@@ -40,7 +42,6 @@ int main(int argc, char* argv[]) {
   C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
   C2D_Prepare();
   consoleInit(GFX_BOTTOM, NULL);
-
   // Create screens
   C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
@@ -48,14 +49,14 @@ int main(int argc, char* argv[]) {
   u32* clrPalette = Color_GeneratePalete(0xA8, 0xB0);
   u32 clrRec = C2D_Color32(0xAB, 0x3F, 0x3F, 0xFF);
   u32 clrClear = C2D_Color32(0x23, 0x23, 0x23, 0x68);
-  C2D_Font testFont = C2D_FontLoad("romfs:/fonts/test.bcfnt");
-  C2D_TextBuf testTextBuf = C2D_TextBufNew(4096);
-  C2D_Text testText;
-  C2D_TextFontParse(&testText, testFont, testTextBuf, "Farbtönßtudios");
-  //C2D_TextParse(&testText, testTextBuf, "test.");
-  C2D_TextOptimize(&testText);
 
-  unsigned char currentDifficulty = 4;
+  //C2D_Font testFont = C2D_FontLoad("romfs:/fonts/test.bcfnt");
+  //C2D_TextBuf testTextBuf = C2D_TextBufNew(4096);
+  //C2D_Text testText;
+  //C2D_TextFontParse(&testText, testFont, testTextBuf, "Farbtönßtudios");
+  //C2D_TextOptimize(&testText);
+
+  unsigned char currentDifficulty = 1;
 
   LevelRuntimeData* testData = Level_CreateNew(currentDifficulty);
 
@@ -77,26 +78,30 @@ int main(int argc, char* argv[]) {
     printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
     printf("\x1b[7;1HLevel:  %3d", testData->Difficulty);
 
-    unsigned char levelTickResult = Level_TickLevel(testData);
-    if (levelTickResult == 0x1) {
-      break;
-    }
-    if (levelTickResult == 0x2) {
-      currentDifficulty = currentDifficulty + 1;
-      testData = Level_CreateNew(currentDifficulty);
-    }
+    //Autoplay_FakeInput(testData);
+
+    //for (unsigned char i = 0; i < 5; i++) {
+      unsigned char levelTickResult = Level_TickLevel(testData);
+      if (levelTickResult == 0x1) {
+        break;
+      }
+      if (levelTickResult == 0x2) {
+        currentDifficulty = currentDifficulty + 1;
+        testData = Level_CreateNew(currentDifficulty);
+      }
+    //}
 
     // Render the scene
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
     C2D_TargetClear(top, clrClear);
     C2D_SceneBegin(top);
     Level_DrawLevel(testData, clrPalette);
-    C2D_DrawText(&testText, C2D_AtBaseline | C2D_WithColor, 50.0f, 50.0f, 0.0f, 0.25f, 0.25f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
+    //C2D_DrawText(&testText, C2D_AtBaseline | C2D_WithColor, 50.0f, 50.0f, 0.0f, 0.25f, 0.25f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
 
     C3D_FrameEnd(0);
   }
-  C2D_FontFree(testFont);
-  C2D_TextBufDelete(testTextBuf);
+  //C2D_FontFree(testFont);
+  //C2D_TextBufDelete(testTextBuf);
   // Deinit libs
   C2D_Fini();
   C3D_Fini();
