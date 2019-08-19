@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
   C2D_Font testFont = C2D_FontLoad("romfs:/fonts/test.bcfnt");
   C2D_TextBuf testTextBuf = C2D_TextBufNew(4096);
   C2D_Text testText;
-  C2D_TextFontParse(&testText, testFont, testTextBuf, "test.Éáú");
+  C2D_TextFontParse(&testText, testFont, testTextBuf, "Farbtönßtudios");
   //C2D_TextParse(&testText, testTextBuf, "test.");
   C2D_TextOptimize(&testText);
   Point testBallPosition;
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
     C2D_SceneBegin(top);
     printf("%x", testFont);
     Level_DrawLevel(&testData, clrRec, clrRec);
-    C2D_DrawText(&testText, 0, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, C2D_Color32f(1.0f,1.0f,0.0f,1.0f));
+    C2D_DrawText(&testText, C2D_AtBaseline | C2D_WithColor, 50.0f, 50.0f, 0.0f, 0.25f, 0.25f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
 
     C3D_FrameEnd(0);
   }
