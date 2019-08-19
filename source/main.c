@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "point.h"
 #include "breaker.h"
 #include "level.h"
+#include "color.h"
 
 int main(int argc, char* argv[]) {
 
@@ -44,6 +45,7 @@ int main(int argc, char* argv[]) {
   C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
   Result rc = romfsInit();
+  u32* clrPalette = Color_GeneratePalete(0xA8, 0xB0);
   u32 clrRec = C2D_Color32(0xAB, 0x3F, 0x3F, 0xFF);
   u32 clrClear = C2D_Color32(0x23, 0x23, 0x23, 0x68);
   C2D_Font testFont = C2D_FontLoad("romfs:/fonts/test.bcfnt");
@@ -53,7 +55,7 @@ int main(int argc, char* argv[]) {
   //C2D_TextParse(&testText, testTextBuf, "test.");
   C2D_TextOptimize(&testText);
 
-  LevelRuntimeData* testData = Level_CreateNew(1);
+  LevelRuntimeData* testData = Level_CreateNew(0);
 
 
   // Main loop
@@ -81,7 +83,7 @@ int main(int argc, char* argv[]) {
     C2D_TargetClear(top, clrClear);
     C2D_SceneBegin(top);
     printf("%x", testFont);
-    Level_DrawLevel(testData, clrRec, clrRec);
+    Level_DrawLevel(testData, clrPalette);
     C2D_DrawText(&testText, C2D_AtBaseline | C2D_WithColor, 50.0f, 50.0f, 0.0f, 0.25f, 0.25f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
 
     C3D_FrameEnd(0);

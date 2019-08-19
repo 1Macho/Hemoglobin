@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
   LevelRuntimeData* result = malloc(sizeof(LevelRuntimeData));
-  result->difficulty = difficulty;
+  result->Difficulty = difficulty;
   short ballCountIntermediate = (0-(((255-difficulty)/97)*((255-difficulty)/97)))+8;
   if (ballCountIntermediate > 8) { ballCountIntermediate = 8; }
   if (ballCountIntermediate < 1) { ballCountIntermediate = 1; }
@@ -37,7 +37,7 @@ LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
   result->PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
   result->BreakerCount = 1;
   result->PadLength = 280 + (difficulty * -1);
-  BreakerBall* initialBreaker = Breaker_CreateNew(10, 100, 1, 1);
+  BreakerBall* initialBreaker = Breaker_CreateNew((SCREEN_WIDTH/2), (SCREEN_HEIGHT), 1, 1);
   result->Breakers[0] = initialBreaker;
   //printf("%x", &initialBreaker);
   return result;
@@ -95,7 +95,7 @@ unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
 }
 
 unsigned char Level_TickLevel (LevelRuntimeData* level) {
-  unsigned char ticks = (level->difficulty / 80) + 3;
+  unsigned char ticks = (level->Difficulty / 80) + 3;
   if (ticks == 0) {ticks = 1;}
   for (unsigned char i = 0; i < ticks; i++) {
     short PadDifference = level->TargetPadPosition - level->PadPosition;
@@ -109,18 +109,21 @@ unsigned char Level_TickLevel (LevelRuntimeData* level) {
   return 0;
 }
 
-void Level_DrawLevel(LevelRuntimeData* level, u32 clrRec, u32 clrPad) {
+void Level_DrawLevel(LevelRuntimeData* level, u32* clrPalette) {
+  u32 padColor = clrPalette[level->Difficulty];
   for (unsigned char i = 0; i < level->BreakerCount; i++) {
-    Breaker_DrawBreaker(level->Breakers[i], clrRec);
+    Breaker_DrawBreaker(level->Breakers[i], padColor);
   }
-  C2D_DrawRectangle(level->PadPosition, SCREEN_HEIGHT - PAD_HEIGHT, 0, level->PadLength, PAD_HEIGHT, clrPad, clrPad, clrPad, clrPad);
+
+  C2D_DrawRectangle(level->PadPosition, SCREEN_HEIGHT - PAD_HEIGHT, 0, level->PadLength, PAD_HEIGHT, padColor, padColor, padColor, padColor);
 
   for (unsigned char x = 0; x < BLOCK_HORIZONTAL; x++) {
     for (unsigned char y = 0; y < BLOCK_VERTICAL; y++) {
       if (level->BlockStates[x][y] > 0x0) {
         short xPos = BLOCK_START_H + (x * (BLOCK_WIDTH + BLOCK_PADDING));
         short yPos = BLOCK_START_V + (y * (BLOCK_HEIGHT + BLOCK_PADDING));
-        C2D_DrawRectangle(xPos, yPos, 0, BLOCK_WIDTH, BLOCK_HEIGHT, clrPad, clrPad, clrPad, clrPad);
+        u32 thisColor = clrPalette[level->BlockStates[x][y]];
+        C2D_DrawRectangle(xPos, yPos, 0, BLOCK_WIDTH, BLOCK_HEIGHT, thisColor, thisColor, thisColor, thisColor);
       }
     }
   }

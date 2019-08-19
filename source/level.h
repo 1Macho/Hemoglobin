@@ -45,7 +45,7 @@ typedef struct LevelRuntimeData {
   short TargetPadPosition;
   short PadPosition;
   unsigned short PadLength;
-  unsigned char difficulty;
+  unsigned char Difficulty;
   unsigned char BlockStates [BLOCK_HORIZONTAL][BLOCK_VERTICAL];
 } LevelRuntimeData;
 
@@ -54,7 +54,7 @@ LevelRuntimeData* Level_CreateNew (unsigned char difficulty);
 unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char X, unsigned char Y);
 unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level);
 unsigned char Level_TickLevel (LevelRuntimeData* level);
-void Level_DrawLevel(LevelRuntimeData* level, u32 clrRec, u32 clrPad);
+void Level_DrawLevel(LevelRuntimeData* level, u32* clrPalette);
 void Level_HandleInput(LevelRuntimeData* level);
 
 #endif
