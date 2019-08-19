@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPAWN_AREA_BEGIN ((SCREEN_WIDTH/2) - (SPAWN_AREA_WIDTH/2))
 
 typedef struct LevelRuntimeData {
-  BreakerBall* Breakers[8];
+  BreakerBall* Breakers[15];
   unsigned char BreakerCount;
   unsigned char TargetBreakerCount;
   short TargetPadPosition;
@@ -52,11 +52,13 @@ typedef struct LevelRuntimeData {
   unsigned short BreakerSpawnPos;
   unsigned char EnabledBlocks;
   unsigned char Difficulty;
+  unsigned char SafeSpawn;
   unsigned char BlockStates [BLOCK_HORIZONTAL][BLOCK_VERTICAL];
 } LevelRuntimeData;
 
 LevelRuntimeData* Level_CreateNew (unsigned char difficulty);
 
+void Level_RemoveBreaker (LevelRuntimeData* level, unsigned char toRemove);
 void Level_SetNewSpawnPosition (LevelRuntimeData* level);
 unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char X, unsigned char Y);
 unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level);

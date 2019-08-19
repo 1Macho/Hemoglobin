@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
 
   Result rc = romfsInit();
   u32* clrPalette = Color_GeneratePalete(0xA8, 0xB0);
-  u32 clrRec = C2D_Color32(0xAB, 0x3F, 0x3F, 0xFF);
   u32 clrClear = C2D_Color32(0x23, 0x23, 0x23, 0x68);
 
   //C2D_Font testFont = C2D_FontLoad("romfs:/fonts/test.bcfnt");
@@ -56,7 +55,7 @@ int main(int argc, char* argv[]) {
   //C2D_TextFontParse(&testText, testFont, testTextBuf, "Farbtönßtudios");
   //C2D_TextOptimize(&testText);
 
-  unsigned char currentDifficulty = 1;
+  unsigned char currentDifficulty = 5;
 
   LevelRuntimeData* testData = Level_CreateNew(currentDifficulty);
 

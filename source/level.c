@@ -41,7 +41,8 @@ LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
   result->PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
   result->BreakerCount = 0;
   result->PadLength = (300 + (difficulty * -1)) / 2;
-  result->BreakerSpawnTime = 100;
+  result->BreakerSpawnTime = 128;
+  result->SafeSpawn = 1;
   Level_SetNewSpawnPosition(result);
   //printf("%x", &initialBreaker);
   return result;
@@ -59,6 +60,13 @@ unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char 
   short blockStartY = BLOCK_START_V + ((BLOCK_HEIGHT + BLOCK_PADDING)*blockY);
   short blockEndY = blockStartY + BLOCK_HEIGHT;
   return Breaker_CollideWithBlock(target, blockStartX, blockEndX, blockStartY, blockEndY);
+}
+
+void Level_RemoveBreaker (LevelRuntimeData* level, unsigned char toRemove) {
+  for(unsigned char i = toRemove + 1; i < level->BreakerCount;i++) {
+    level->Breakers[i-1] = level->Breakers[i];
+  }
+  level->BreakerCount = level->BreakerCount - 1;
 }
 
 unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
@@ -124,17 +132,28 @@ unsigned char Level_TickLevel (LevelRuntimeData* level) {
         BreakerBall* newBall = Breaker_CreateNew(level->BreakerSpawnPos, SCREEN_HEIGHT / 2, hVelocity, -1);
         level->Breakers[level->BreakerCount] = newBall;
         level->BreakerCount = level->BreakerCount + 1;
-        level->BreakerSpawnTime = 255;
+        level->BreakerSpawnTime = 1023;
         Level_SetNewSpawnPosition(level);
+        level->SafeSpawn = 0;
       }
     }
     short PadDifference = level->TargetPadPosition - level->PadPosition;
     level->PadPosition += PadDifference / 3;
+
+    unsigned char toRemove = 16;
+
     if (level->BreakerCount > 0) {
       for (unsigned char i = 0; i < level->BreakerCount; i++) {
         if (Level_TickBall(level->Breakers[i], level)) {
-          return 1;
+          toRemove = i;
         }
+      }
+      if (toRemove != 16) {
+        Level_RemoveBreaker(level, toRemove);
+      }
+    } else {
+      if (level->SafeSpawn == 0) {
+        return 1;
       }
     }
     if (level->EnabledBlocks == 0x0) {
@@ -146,7 +165,7 @@ unsigned char Level_TickLevel (LevelRuntimeData* level) {
 
 void Level_DrawLevel(LevelRuntimeData* level, u32* clrPalette) {
 
-  u32 newBreakerColor = clrPalette[level->BreakerSpawnTime];
+  u32 newBreakerColor = clrPalette[level->BreakerSpawnTime / 4];
 
   if (level->BreakerCount != level->TargetBreakerCount) {
     C2D_DrawRectangle(level->BreakerSpawnPos, (SCREEN_HEIGHT/2), 0, BREAKER_SIDE, BREAKER_SIDE, newBreakerColor, newBreakerColor, newBreakerColor, newBreakerColor);
@@ -182,5 +201,6 @@ void Level_HandleInput(LevelRuntimeData* level) {
     short interpolation_id = touch.px - TOUCH_PADDING;
     long interpolation = interpolation_id * SCREEN_WIDTH / (TOUCH_WIDTH - TOUCH_PADDING * 2);
     level->TargetPadPosition = interpolation - (level->PadLength / 2);
+    rand();
   }
 }
