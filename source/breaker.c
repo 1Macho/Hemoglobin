@@ -19,17 +19,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "breaker.h"
 
-BreakerBall Breaker_CreateNew(short x, short y, short dx, short dy) {
-  BreakerBall ball;
-  Point pos;
-  pos.X = x;
-  pos.Y = y;
-  Point vel;
-  vel.X = dx;
-  vel.Y = dy;
-  ball.Position = &pos;
-  ball.Velocity = &vel;
-  return ball;
+BreakerBall* Breaker_CreateNew(short x, short y, short dx, short dy) {
+  BreakerBall* target = malloc(sizeof(BreakerBall));
+  Point* pos = malloc(sizeof(Point));
+  Point* vel = malloc(sizeof(Point));
+  pos->X = x;
+  pos->Y = y;
+  vel->X = dx;
+  vel->Y = dy;
+  target->Position = pos;
+  target->Velocity = vel;
+  return target;
 }
 
 

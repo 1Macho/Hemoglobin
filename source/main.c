@@ -52,26 +52,8 @@ int main(int argc, char* argv[]) {
   C2D_TextFontParse(&testText, testFont, testTextBuf, "Farbtönßtudios");
   //C2D_TextParse(&testText, testTextBuf, "test.");
   C2D_TextOptimize(&testText);
-  Point testBallPosition;
-  testBallPosition.X = SCREEN_WIDTH / 2;
-  testBallPosition.Y = SCREEN_HEIGHT / 2;
-  Point testBallVelocity;
-  testBallVelocity.X = 1;
-  testBallVelocity.Y = 1;
-  BreakerBall testBall;
-  testBall.Position = &testBallPosition;
-  testBall.Velocity = &testBallVelocity;
-  testBall.Saveable = 1;
-  LevelRuntimeData testData;
-  testData.Breakers[0] = &testBall;
-  testData.BreakerCount = 1;
-  testData.PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
 
-  for (unsigned char x = 0; x < BLOCK_HORIZONTAL; x++) {
-    for (unsigned char y = 0; y < BLOCK_VERTICAL; y++) {
-      testData.BlockStates[x][y] = 0x1;
-    }
-  }
+  LevelRuntimeData* testData = Level_CreateNew(1);
 
 
   // Main loop
@@ -79,7 +61,7 @@ int main(int argc, char* argv[]) {
   {
     hidScanInput();
 
-		Level_HandleInput(&testData);
+		Level_HandleInput(testData);
 
     // Respond to user input
     u32 kDown = hidKeysDown();
@@ -90,7 +72,7 @@ int main(int argc, char* argv[]) {
     printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
     printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
 
-    if (Level_TickLevel(&testData)) {
+    if (Level_TickLevel(testData)) {
       break;
     }
 
@@ -99,7 +81,7 @@ int main(int argc, char* argv[]) {
     C2D_TargetClear(top, clrClear);
     C2D_SceneBegin(top);
     printf("%x", testFont);
-    Level_DrawLevel(&testData, clrRec, clrRec);
+    Level_DrawLevel(testData, clrRec, clrRec);
     C2D_DrawText(&testText, C2D_AtBaseline | C2D_WithColor, 50.0f, 50.0f, 0.0f, 0.25f, 0.25f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
 
     C3D_FrameEnd(0);

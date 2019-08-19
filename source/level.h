@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "breaker.h"
 #include "constants.h"
 #include <citro2d.h>
+#include <stdlib.h>
 
 
 #define PAD_LENGTH 32
@@ -43,10 +44,12 @@ typedef struct LevelRuntimeData {
   unsigned char TargetBreakerCount;
   short TargetPadPosition;
   short PadPosition;
+  unsigned short PadLength;
+  unsigned char difficulty;
   unsigned char BlockStates [BLOCK_HORIZONTAL][BLOCK_VERTICAL];
 } LevelRuntimeData;
 
-LevelRuntimeData Level_CreateNew (unsigned char difficulty);
+LevelRuntimeData* Level_CreateNew (unsigned char difficulty);
 
 unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char X, unsigned char Y);
 unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level);

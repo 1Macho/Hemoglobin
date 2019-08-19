@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "point.h"
 #include "constants.h"
 #include <citro2d.h>
+#include <stdlib.h>
 
 #define BREAKER_SIDE 8
 
@@ -31,7 +32,7 @@ typedef struct BreakerBall {
   unsigned char Saveable;
 } BreakerBall;
 
-BreakerBall Breaker_CreateNew(short x, short y, short dx, short dy);
+BreakerBall* Breaker_CreateNew(short x, short y, short dx, short dy);
 
 short Breaker_TopEnd(BreakerBall* target);
 short Breaker_BottomEnd(BreakerBall* target);
