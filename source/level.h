@@ -38,12 +38,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BLOCK_START_V (12)
 
 typedef struct LevelRuntimeData {
-  BreakerBall* Breakers[32];
+  BreakerBall* Breakers[8];
   unsigned char BreakerCount;
+  unsigned char TargetBreakerCount;
   short TargetPadPosition;
   short PadPosition;
   unsigned char BlockStates [BLOCK_HORIZONTAL][BLOCK_VERTICAL];
 } LevelRuntimeData;
+
+LevelRuntimeData Level_CreateNew (unsigned char difficulty);
 
 unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char X, unsigned char Y);
 unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level);

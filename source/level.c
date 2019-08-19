@@ -18,6 +18,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "level.h"
 
+LevelRuntimeData Level_CreateNew (unsigned char difficulty) {
+  LevelRuntimeData result;
+  short ballCountIntermediate = (0-(((255-difficulty)/97)*((255-difficulty)/97)))+8;
+  if (ballCountIntermediate > 8) { ballCountIntermediate = 8; }
+  if (ballCountIntermediate < 1) { ballCountIntermediate = 1; }
+  result.TargetBreakerCount = ballCountIntermediate;
+  for (int y = 0; y < BLOCK_VERTICAL; y++) {
+    unsigned short toSet = difficulty * y;
+    if (toSet < 1) {toSet = 1;}
+    if (toSet > 255) [toSet = 255;]
+    for (int x = 0; x < BLOCK_HORIZONTAL; x++) {
+      result.BlockStates[x][y] = toSet;
+    }
+  }
+  result.TargetPadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
+  result.PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
+  result.BreakerCount;
+  result.Breakers[0] = Breaker_CreateNew((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), 1,1);
+  return result;
+}
+
 unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char blockX, unsigned char blockY) {
   short blockStartX = BLOCK_START_H + ((BLOCK_WIDTH + BLOCK_PADDING)*blockX);
   short blockEndX = blockStartX + BLOCK_WIDTH;
@@ -59,9 +80,9 @@ unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
 
   for (unsigned char x = 0; x < BLOCK_HORIZONTAL; x++) {
     for (unsigned char y = 0; y < BLOCK_VERTICAL; y++) {
-      if (level->BlockStates[x][y] == 0x1) {
+      if (level->BlockStates[x][y] > 0x0) {
         if (Level_VerifyBallBlockCollision(target, x, y)) {
-          level->BlockStates[x][y] = 0x0;
+          level->BlockStates[x][y] = level->BlockStates[x][y] - 1;
         }
       }
     }
@@ -88,7 +109,7 @@ void Level_DrawLevel(LevelRuntimeData* level, u32 clrRec, u32 clrPad) {
 
   for (unsigned char x = 0; x < BLOCK_HORIZONTAL; x++) {
     for (unsigned char y = 0; y < BLOCK_VERTICAL; y++) {
-      if (level->BlockStates[x][y] == 0x1) {
+      if (level->BlockStates[x][y] > 0x0) {
         short xPos = BLOCK_START_H + (x * (BLOCK_WIDTH + BLOCK_PADDING));
         short yPos = BLOCK_START_V + (y * (BLOCK_HEIGHT + BLOCK_PADDING));
         C2D_DrawRectangle(xPos, yPos, 0, BLOCK_WIDTH, BLOCK_HEIGHT, clrPad, clrPad, clrPad, clrPad);
