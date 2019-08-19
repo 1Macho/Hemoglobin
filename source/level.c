@@ -27,15 +27,16 @@ LevelRuntimeData Level_CreateNew (unsigned char difficulty) {
   for (int y = 0; y < BLOCK_VERTICAL; y++) {
     unsigned short toSet = difficulty * y;
     if (toSet < 1) {toSet = 1;}
-    if (toSet > 255) [toSet = 255;]
+    if (toSet > 255) {toSet = 255;}
     for (int x = 0; x < BLOCK_HORIZONTAL; x++) {
       result.BlockStates[x][y] = toSet;
     }
   }
   result.TargetPadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
   result.PadPosition = (SCREEN_WIDTH / 2) - (PAD_LENGTH / 2);
-  result.BreakerCount;
-  result.Breakers[0] = Breaker_CreateNew((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), 1,1);
+  result.BreakerCount = 1;
+  BreakerBall initialBreaker = Breaker_CreateNew((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), 1,1);
+  result.Breakers[0] = &initialBreaker;
   return result;
 }
 

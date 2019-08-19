@@ -27,8 +27,8 @@ BreakerBall Breaker_CreateNew(short x, short y, short dx, short dy) {
   Point vel;
   vel.X = dx;
   vel.Y = dy;
-  ball.Position = pos;
-  ball.Velocity = vel;
+  ball.Position = &pos;
+  ball.Velocity = &vel;
   return ball;
 }
 
