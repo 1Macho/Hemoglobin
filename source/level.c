@@ -94,8 +94,13 @@ unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
     if (Breaker_ResolveCollisionVertical(target, level->PadPosition, level->PadPosition + level->PadLength)) {
       Point_Invert(target->Velocity, 1);
       target->Position->Y = SCREEN_HEIGHT - PAD_HEIGHT - BREAKER_SIDE;
+      level->Multiplier += 1;
+      level->Score += (target->Score * level->Multiplier);
+      target->Score = 0;
+      target->Multiplier = 0;
     }
     else {
+      level->Multiplier = 0;
       return 1;
     }
   }
@@ -107,6 +112,9 @@ unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
           level->BlockStates[x][y] = level->BlockStates[x][y] - 1;
           if (level->BlockStates[x][y] == 0x0) {
             level->EnabledBlocks = level->EnabledBlocks - 1;
+            target->Multiplier += 1;
+            unsigned char generatedScore = rand()%5 + 4;
+            target->Score += generatedScore * target->Multiplier;
           }
         }
       }

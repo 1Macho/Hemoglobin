@@ -53,6 +53,8 @@ typedef struct LevelRuntimeData {
   unsigned char EnabledBlocks;
   unsigned char Difficulty;
   unsigned char SafeSpawn;
+  unsigned long Multiplier;
+  unsigned long Score;
   unsigned char BlockStates [BLOCK_HORIZONTAL][BLOCK_VERTICAL];
 } LevelRuntimeData;
 

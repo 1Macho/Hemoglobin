@@ -75,7 +75,9 @@ int main(int argc, char* argv[]) {
     printf("\x1b[2;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
     printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
     printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
-    printf("\x1b[7;1HLevel:  %3d", testData->Difficulty);
+    printf("\x1b[7;1HLevel:  %d\x1b[K", testData->Difficulty);
+    printf("\x1b[8;1HScore:  %d\x1b[K", testData->Score);\
+    printf("\x1b[9;1HMultiplier:  x%d\x1b[K", testData->Multiplier);
 
     //Autoplay_FakeInput(testData);
 
