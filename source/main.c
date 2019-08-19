@@ -43,10 +43,15 @@ int main(int argc, char* argv[]) {
   // Create screens
   C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
-
+  Result rc = romfsInit();
   u32 clrRec = C2D_Color32(0xAB, 0x3F, 0x3F, 0xFF);
   u32 clrClear = C2D_Color32(0x23, 0x23, 0x23, 0x68);
-
+  C2D_Font testFont = C2D_FontLoad("romfs:/fonts/test.bcfnt");
+  C2D_TextBuf testTextBuf = C2D_TextBufNew(4096);
+  C2D_Text testText;
+  C2D_TextFontParse(&testText, testFont, testTextBuf, "test.Éáú");
+  //C2D_TextParse(&testText, testTextBuf, "test.");
+  C2D_TextOptimize(&testText);
   Point testBallPosition;
   testBallPosition.X = SCREEN_WIDTH / 2;
   testBallPosition.Y = SCREEN_HEIGHT / 2;
@@ -93,12 +98,14 @@ int main(int argc, char* argv[]) {
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
     C2D_TargetClear(top, clrClear);
     C2D_SceneBegin(top);
-
+    printf("%x", testFont);
     Level_DrawLevel(&testData, clrRec, clrRec);
+    C2D_DrawText(&testText, 0, 50.0f, 50.0f, 0.0f, 1.0f, 1.0f, C2D_Color32f(1.0f,1.0f,0.0f,1.0f));
 
     C3D_FrameEnd(0);
   }
-
+  C2D_FontFree(testFont);
+  C2D_TextBufDelete(testTextBuf);
   // Deinit libs
   C2D_Fini();
   C3D_Fini();
