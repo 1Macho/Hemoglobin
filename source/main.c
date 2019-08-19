@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
   //C2D_TextParse(&testText, testTextBuf, "test.");
   C2D_TextOptimize(&testText);
 
-  unsigned char currentDifficulty = 3;
+  unsigned char currentDifficulty = 4;
 
   LevelRuntimeData* testData = Level_CreateNew(currentDifficulty);
 
@@ -90,7 +90,6 @@ int main(int argc, char* argv[]) {
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
     C2D_TargetClear(top, clrClear);
     C2D_SceneBegin(top);
-    printf("%x", testFont);
     Level_DrawLevel(testData, clrPalette);
     C2D_DrawText(&testText, C2D_AtBaseline | C2D_WithColor, 50.0f, 50.0f, 0.0f, 0.25f, 0.25f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
 

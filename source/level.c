@@ -21,12 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
   LevelRuntimeData* result = malloc(sizeof(LevelRuntimeData));
   result->Difficulty = difficulty;
-  short ballCountIntermediate = (0-(((255-difficulty)/97)*((255-difficulty)/97)))+8;
+  short ballCountIntermediate = (difficulty/32)+1;
   if (ballCountIntermediate > 8) { ballCountIntermediate = 8; }
   if (ballCountIntermediate < 1) { ballCountIntermediate = 1; }
   result->TargetBreakerCount = ballCountIntermediate;
   for (int y = 0; y < BLOCK_VERTICAL; y++) {
-    unsigned short toSet = (difficulty) * y;
+    double calculatedHardness = tan((M_PI*((double)y))/(20.0)) * (double)(difficulty);
+    unsigned short toSet = (unsigned short) calculatedHardness;
     if (toSet < 1) {toSet = 1;}
     if (toSet > 255) {toSet = 255;}
     for (int x = 0; x < BLOCK_HORIZONTAL; x++) {

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "constants.h"
 #include <citro2d.h>
 #include <stdlib.h>
-
+#include <math.h>
 
 #define PAD_LENGTH 32
 #define PAD_HEIGHT 6
