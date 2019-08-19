@@ -31,6 +31,8 @@ typedef struct BreakerBall {
   unsigned char Saveable;
 } BreakerBall;
 
+BreakerBall Breaker_CreateNew(short x, short y, short dx, short dy);
+
 short Breaker_TopEnd(BreakerBall* target);
 short Breaker_BottomEnd(BreakerBall* target);
 short Breaker_LeftEnd(BreakerBall* target);
