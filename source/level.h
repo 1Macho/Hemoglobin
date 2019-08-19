@@ -37,6 +37,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BLOCK_SIZE_HORIZONTAL (((BLOCK_WIDTH + BLOCK_PADDING) * BLOCK_HORIZONTAL) - BLOCK_PADDING)
 #define BLOCK_START_H ((SCREEN_WIDTH / 2) - (BLOCK_SIZE_HORIZONTAL / 2))
 #define BLOCK_START_V (12)
+#define SPAWN_AREA_WIDTH ((SCREEN_WIDTH * 3) / 4)
+#define SPAWN_AREA_SEGMENTS (SPAWN_AREA_WIDTH / 3)
+#define SPAWN_AREA_BEGIN ((SCREEN_WIDTH/2) - (SPAWN_AREA_WIDTH/2))
 
 typedef struct LevelRuntimeData {
   BreakerBall* Breakers[8];
@@ -45,6 +48,8 @@ typedef struct LevelRuntimeData {
   short TargetPadPosition;
   short PadPosition;
   unsigned short PadLength;
+  unsigned short BreakerSpawnTime;
+  unsigned short BreakerSpawnPos;
   unsigned char EnabledBlocks;
   unsigned char Difficulty;
   unsigned char BlockStates [BLOCK_HORIZONTAL][BLOCK_VERTICAL];
@@ -52,6 +57,7 @@ typedef struct LevelRuntimeData {
 
 LevelRuntimeData* Level_CreateNew (unsigned char difficulty);
 
+void Level_SetNewSpawnPosition (LevelRuntimeData* level);
 unsigned char Level_VerifyBallBlockCollision(BreakerBall* target, unsigned char X, unsigned char Y);
 unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level);
 unsigned char Level_TickLevel (LevelRuntimeData* level);
