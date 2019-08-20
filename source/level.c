@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "level.h"
 
-LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
+LevelRuntimeData* Level_CreateNew (unsigned char difficulty, unsigned long multiplier) {
   LevelRuntimeData* result = malloc(sizeof(LevelRuntimeData));
   result->Difficulty = difficulty;
   long accumulatedHardness = 0;
@@ -43,6 +43,9 @@ LevelRuntimeData* Level_CreateNew (unsigned char difficulty) {
   result->PadLength = (300 + (difficulty * -1)) / 2;
   result->BreakerSpawnTime = 128;
   result->SafeSpawn = 1;
+  result->PerfectScore = 1;
+  result->Score = 0;
+  result->Multiplier = multiplier;
   Level_SetNewSpawnPosition(result);
   //printf("%x", &initialBreaker);
   return result;
@@ -101,6 +104,7 @@ unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
     }
     else {
       level->Multiplier = 0;
+      level->PerfectScore = 0;
       return 1;
     }
   }
@@ -110,11 +114,11 @@ unsigned char Level_TickBall(BreakerBall* target, LevelRuntimeData* level) {
       if (level->BlockStates[x][y] > 0x0) {
         if (Level_VerifyBallBlockCollision(target, x, y)) {
           level->BlockStates[x][y] = level->BlockStates[x][y] - 1;
+          target->Multiplier += 1;
+          unsigned char generatedScore = rand()%5 + 4;
+          target->Score += generatedScore * target->Multiplier;
           if (level->BlockStates[x][y] == 0x0) {
             level->EnabledBlocks = level->EnabledBlocks - 1;
-            target->Multiplier += 1;
-            unsigned char generatedScore = rand()%5 + 4;
-            target->Score += generatedScore * target->Multiplier;
           }
         }
       }

@@ -30,8 +30,8 @@ typedef struct BreakerBall {
   Point* Position;
   Point* Velocity;
   unsigned char Saveable;
-  unsigned short Multiplier;
-  unsigned short Score;
+  unsigned long Multiplier;
+  unsigned long Score;
 } BreakerBall;
 
 BreakerBall* Breaker_CreateNew(short x, short y, short dx, short dy);

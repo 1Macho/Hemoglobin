@@ -29,6 +29,8 @@ BreakerBall* Breaker_CreateNew(short x, short y, short dx, short dy) {
   vel->Y = dy;
   target->Position = pos;
   target->Velocity = vel;
+  target->Score = 0;
+  target->Multiplier = 0;
   return target;
 }
 

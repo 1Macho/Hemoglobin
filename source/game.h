@@ -28,13 +28,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define GAME_VALUE 0xB0
 
 typedef struct GameRuntimeData {
-  LevelRuntimeData* currentLevel;
-  unsigned char currentDifficulty;
-  u32 clrClear;
-  u32* clrPalette;
-  C3D_RenderTarget* topLeft;
-  C3D_RenderTarget* topRight;
-  C3D_RenderTarget* bottom;
+  LevelRuntimeData* CurrentLevel;
+  unsigned char CurrentDifficulty;
+  u32 ClrClear;
+  u32* ClrPalette;
+  C3D_RenderTarget* TopLeft;
+  C3D_RenderTarget* TopRight;
+  C3D_RenderTarget* Bottom;
+  unsigned long Score;
+  C2D_Font Font;
+  C2D_TextBuf ScoreTextBuf;
+  C2D_TextBuf MultiplierTextBuf;
+  C2D_TextBuf LevelTextBuf;
 } GameRuntimeData;
 
 GameRuntimeData* Game_Initialize(C3D_RenderTarget* topLeft, C3D_RenderTarget* topRight, C3D_RenderTarget* bottom);

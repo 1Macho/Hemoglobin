@@ -53,12 +53,13 @@ typedef struct LevelRuntimeData {
   unsigned char EnabledBlocks;
   unsigned char Difficulty;
   unsigned char SafeSpawn;
+  unsigned char PerfectScore;
   unsigned long Multiplier;
   unsigned long Score;
   unsigned char BlockStates [BLOCK_HORIZONTAL][BLOCK_VERTICAL];
 } LevelRuntimeData;
 
-LevelRuntimeData* Level_CreateNew (unsigned char difficulty);
+LevelRuntimeData* Level_CreateNew (unsigned char difficulty, unsigned long multiplier);
 
 void Level_RemoveBreaker (LevelRuntimeData* level, unsigned char toRemove);
 void Level_SetNewSpawnPosition (LevelRuntimeData* level);

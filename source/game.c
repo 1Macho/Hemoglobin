@@ -20,32 +20,66 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 GameRuntimeData* Game_Initialize(C3D_RenderTarget* topLeft, C3D_RenderTarget* topRight, C3D_RenderTarget* bottom) {
   GameRuntimeData* result = malloc(sizeof(GameRuntimeData));
-  result->topLeft = topLeft;
-  result->topRight = topRight;
-  result->bottom = bottom;
-  result->clrPalette = Color_GeneratePalete(GAME_SATURATION, GAME_VALUE);
-  result->clrClear = C2D_Color32(0x23, 0x23, 0x23, 0xFF);
-  result->currentDifficulty = 1;
-  result->currentLevel = Level_CreateNew(result->currentDifficulty);
+  result->TopLeft = topLeft;
+  result->TopRight = topRight;
+  result->Bottom = bottom;
+  result->ClrPalette = Color_GeneratePalete(GAME_SATURATION, GAME_VALUE);
+  result->ClrClear = C2D_Color32(0x23, 0x23, 0x23, 0xFF);
+  result->CurrentDifficulty = 1;
+  result->CurrentLevel = Level_CreateNew(result->CurrentDifficulty, 0);
+  result->Score = 0;
+  result->Font = C2D_FontLoad("romfs:/fonts/ui.bcfnt");
+  result->ScoreTextBuf = C2D_TextBufNew(4096);
+  result->MultiplierTextBuf = C2D_TextBufNew(4096);
+  result->LevelTextBuf = C2D_TextBufNew(4096);
   return result;
 }
 
 unsigned char Game_Update (GameRuntimeData* game) {
-  Level_HandleInput(game->currentLevel);
-  unsigned char levelTickResult = Level_TickLevel(game->currentLevel);
+  Level_HandleInput(game->CurrentLevel);
+  unsigned char levelTickResult = Level_TickLevel(game->CurrentLevel);
   if (levelTickResult == 0x1) {
     return 1;
   }
   if (levelTickResult == 0x2) {
-    game->currentDifficulty = game->currentDifficulty + 1;
-    game->currentLevel = Level_CreateNew(game->currentDifficulty);
+    unsigned long newMultiplier = 0;
+    if (game->CurrentLevel->PerfectScore) {
+      newMultiplier = game->CurrentLevel->Multiplier;
+    }
+    game->Score = game->Score + game->CurrentLevel->Score;
+    game->CurrentDifficulty = game->CurrentDifficulty + 1;
+    game->CurrentLevel = Level_CreateNew(game->CurrentDifficulty, newMultiplier);
   }
   C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-  C2D_TargetClear(game->topLeft, game->clrClear);
-  C2D_SceneBegin(game->topLeft);
-  Level_DrawLevel(game->currentLevel, game->clrPalette);
-  C2D_TargetClear(game->bottom, game->clrClear);
-  C2D_SceneBegin(game->bottom);
+  C2D_TargetClear(game->TopLeft, game->ClrClear);
+  C2D_SceneBegin(game->TopLeft);
+  Level_DrawLevel(game->CurrentLevel, game->ClrPalette);
+  C2D_TargetClear(game->Bottom, game->ClrClear);
+  C2D_SceneBegin(game->Bottom);
+  unsigned long fullScore = game->Score + game->CurrentLevel->Score;
+  unsigned long level = game->CurrentDifficulty;
+  unsigned long multiplier = game->CurrentLevel->Multiplier;
+  C2D_TextBufClear(game->LevelTextBuf);
+  char buflvl[60];
+  C2D_Text LevelText;
+  snprintf(buflvl, sizeof(buflvl), "Schicht %lX", level);
+  C2D_TextFontParse(&LevelText, game->Font, game->LevelTextBuf, buflvl);
+  C2D_TextOptimize(&LevelText);
+	C2D_DrawText(&LevelText, C2D_AtBaseline | C2D_WithColor, 8.0f, 20.0f, 0.0f, 0.5f, 0.5f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
+  C2D_TextBufClear(game->ScoreTextBuf);
+  char bufscr[60];
+  C2D_Text ScoreText;
+  snprintf(bufscr, sizeof(bufscr), "%lu", fullScore);
+  C2D_TextFontParse(&ScoreText, game->Font, game->ScoreTextBuf, bufscr);
+  C2D_TextOptimize(&ScoreText);
+	C2D_DrawText(&ScoreText, C2D_AtBaseline | C2D_WithColor, 8.0f, 40.0f, 0.0f, 0.5f, 0.5f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
+  C2D_TextBufClear(game->MultiplierTextBuf);
+  char bufmul[60];
+  C2D_Text MultiplierText;
+  snprintf(bufmul, sizeof(bufmul), "x%lu", multiplier);
+  C2D_TextFontParse(&MultiplierText, game->Font, game->ScoreTextBuf, bufmul);
+  C2D_TextOptimize(&MultiplierText);
+	C2D_DrawText(&MultiplierText, C2D_AtBaseline | C2D_WithColor, 8.0f, 60.0f, 0.0f, 0.5f, 0.5f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
   C3D_FrameEnd(0);
   return 0;
 }
