@@ -28,11 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "point.h"
-#include "breaker.h"
-#include "level.h"
-#include "autoplay.h"
-#include "color.h"
+#include "game.h"
 
 int main(int argc, char* argv[]) {
 
@@ -46,26 +42,14 @@ int main(int argc, char* argv[]) {
   C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
   Result rc = romfsInit();
-  u32* clrPalette = Color_GeneratePalete(0xA8, 0xB0);
-  u32 clrClear = C2D_Color32(0x23, 0x23, 0x23, 0x68);
 
-  //C2D_Font testFont = C2D_FontLoad("romfs:/fonts/test.bcfnt");
-  //C2D_TextBuf testTextBuf = C2D_TextBufNew(4096);
-  //C2D_Text testText;
-  //C2D_TextFontParse(&testText, testFont, testTextBuf, "Farbtönßtudios");
-  //C2D_TextOptimize(&testText);
-
-  unsigned char currentDifficulty = 5;
-
-  LevelRuntimeData* testData = Level_CreateNew(currentDifficulty);
+  GameRuntimeData* game = Game_Initialize(top, 0, 0);
 
 
   // Main loop
   while (aptMainLoop())
   {
     hidScanInput();
-
-		Level_HandleInput(testData);
 
     // Respond to user input
     u32 kDown = hidKeysDown();
@@ -75,34 +59,11 @@ int main(int argc, char* argv[]) {
     printf("\x1b[2;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
     printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
     printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
-    printf("\x1b[7;1HLevel:  %d\x1b[K", testData->Difficulty);
-    printf("\x1b[8;1HScore:  %d\x1b[K", testData->Score);\
-    printf("\x1b[9;1HMultiplier:  x%d\x1b[K", testData->Multiplier);
 
-    //Autoplay_FakeInput(testData);
-
-    //for (unsigned char i = 0; i < 5; i++) {
-      unsigned char levelTickResult = Level_TickLevel(testData);
-      if (levelTickResult == 0x1) {
-        break;
-      }
-      if (levelTickResult == 0x2) {
-        currentDifficulty = currentDifficulty + 1;
-        testData = Level_CreateNew(currentDifficulty);
-      }
-    //}
-
-    // Render the scene
-    C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-    C2D_TargetClear(top, clrClear);
-    C2D_SceneBegin(top);
-    Level_DrawLevel(testData, clrPalette);
-    //C2D_DrawText(&testText, C2D_AtBaseline | C2D_WithColor, 50.0f, 50.0f, 0.0f, 0.25f, 0.25f, C2D_Color32f(0.81f,0.81f,0.81f,1.0f));
-
-    C3D_FrameEnd(0);
+    if(Game_Update(game)) {
+      break;
+    }
   }
-  //C2D_FontFree(testFont);
-  //C2D_TextBufDelete(testTextBuf);
   // Deinit libs
   C2D_Fini();
   C3D_Fini();
