@@ -44,6 +44,8 @@ unsigned char Game_Update (GameRuntimeData* game) {
   C2D_TargetClear(game->topLeft, game->clrClear);
   C2D_SceneBegin(game->topLeft);
   Level_DrawLevel(game->currentLevel, game->clrPalette);
+  C2D_TargetClear(game->bottom, game->clrClear);
+  C2D_SceneBegin(game->bottom);
   C3D_FrameEnd(0);
   return 0;
 }

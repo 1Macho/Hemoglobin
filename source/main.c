@@ -37,13 +37,14 @@ int main(int argc, char* argv[]) {
   C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
   C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
   C2D_Prepare();
-  consoleInit(GFX_BOTTOM, NULL);
+  //consoleInit(GFX_BOTTOM, NULL);
   // Create screens
   C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+  C3D_RenderTarget* bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
 
   Result rc = romfsInit();
 
-  GameRuntimeData* game = Game_Initialize(top, 0, 0);
+  GameRuntimeData* game = Game_Initialize(top, 0, bottom);
 
 
   // Main loop
@@ -55,10 +56,6 @@ int main(int argc, char* argv[]) {
     u32 kDown = hidKeysDown();
     if (kDown & KEY_START)
       break; // break in order to return to hbmenu
-    printf("\x1b[1;1HAttempt at simple 3ds pong game.");
-    printf("\x1b[2;1HCPU:     %6.2f%%\x1b[K", C3D_GetProcessingTime()*6.0f);
-    printf("\x1b[3;1HGPU:     %6.2f%%\x1b[K", C3D_GetDrawingTime()*6.0f);
-    printf("\x1b[4;1HCmdBuf:  %6.2f%%\x1b[K", C3D_GetCmdBufUsage()*100.0f);
 
     if(Game_Update(game)) {
       break;
